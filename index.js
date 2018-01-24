@@ -22,9 +22,7 @@ export default class TextInputMask extends Component {
     if (this.props.maskDefaultValue &&
         this.props.mask &&
         this.props.value) {
-      mask(this.props.mask, '' + this.props.value, text =>
-        this.input.setNativeProps({ text }),
-      )
+      this.synchronizeValue();
     }
 
     if (this.props.mask && !this.masked) {
@@ -33,17 +31,32 @@ export default class TextInputMask extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.value != nextProps.value) {
-      mask(this.props.mask, '' + nextProps.value, text =>
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value) {
+      this.synchronizeValue();
+    }
+  }
+
+  synchronizeValue() {
+    mask(this.props.mask, this.props.value, text => {
+      if (this.input && !this.input.isFocused()) {
         this.input.setNativeProps({ text })
-      );
+      }
+    });
+  }
+
+  onBlur = (...args) => {
+    this.synchronizeValue();
+
+    if (this.props.onBlur) {
+      this.props.onBlur(...args);
     }
   }
 
   render() {
     return (<TextInput
       {...this.props}
+      onBlur={this.onBlur}
       value={undefined}
       ref={ref => {
         this.input = ref

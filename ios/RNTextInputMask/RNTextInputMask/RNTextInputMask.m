@@ -59,10 +59,10 @@ RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask) {
 - (void)textField:(RCTUITextField *)textField didFillMandatoryCharacters:(BOOL)complete didExtractValue:(NSString *)value
 {
     [self.bridge.eventDispatcher sendTextEventWithType:RCTTextEventTypeChange
-                                   reactTag:[[textField reactSuperview] reactTag]
-                                       text:textField.text
-                                        key:nil
-                                 eventCount:1];
+                                              reactTag:[[textField reactSuperview] reactTag]
+                                                  text:textField.text
+                                                   key:nil
+                                            eventCount:0];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
@@ -71,7 +71,7 @@ RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask) {
                                               reactTag:[[textField reactSuperview] reactTag]
                                                   text:textField.text
                                                    key:nil
-                                            eventCount:1];
+                                            eventCount:0];
 }
 
 - (void)textFieldDidEndEditing:(RCTUITextField *)textField
@@ -80,7 +80,7 @@ RCT_EXPORT_METHOD(setMask:(nonnull NSNumber *)reactNode mask:(NSString *)mask) {
                                               reactTag:[[textField reactSuperview] reactTag]
                                                   text:textField.text
                                                    key:nil
-                                            eventCount:1];
+                                            eventCount:0];
 }
 
 @end
