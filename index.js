@@ -17,38 +17,52 @@ export default class TextInputMask extends Component {
     maskDefaultValue: true,
   }
 
-  masked = false
-
   componentDidMount() {
     if (this.props.maskDefaultValue &&
         this.props.mask &&
         this.props.value) {
-      mask(this.props.mask, '' + this.props.value, text =>
-        this.input && this.input.setNativeProps({ text }),
-      )
+      this.synchronizeValue();
     }
 
-    if (this.props.mask && !this.masked) {
-      this.masked = true
+    if (this.props.mask) {
       setMask(findNodeHandle(this.input), this.props.mask)
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.mask && (this.props.value !== nextProps.value)) {
-      mask(this.props.mask, '' + nextProps.value, text =>
-      this.input && this.input.setNativeProps({ text })
-      );
+  componentDidUpdate(prevProps) {
+    if (prevProps.mask !== this.props.mask) {
+      setMask(findNodeHandle(this.input), this.props.mask)
     }
 
-    if (this.props.mask !== nextProps.mask) {
-      setMask(findNodeHandle(this.input), nextProps.mask)
+    if (prevProps.value !== this.props.value) {
+      this.synchronizeValue();
+    }
+  }
+
+  synchronizeValue() {
+    if (!this.props.mask || !this.props.value || !this.props.value.length) {
+      return;
+    }
+
+    mask(this.props.mask, this.props.value, text => {
+      if (this.input && !this.input.isFocused()) {
+        this.input.setNativeProps({ text })
+      }
+    });
+  }
+
+  onBlur = (...args) => {
+    this.synchronizeValue();
+
+    if (this.props.onBlur) {
+      this.props.onBlur(...args);
     }
   }
 
   render() {
     return (<TextInput
       {...this.props}
+      onBlur={this.onBlur}
       value={undefined}
       ref={ref => {
         this.input = ref
