@@ -38,6 +38,10 @@ export default class TextInputMask extends Component {
   }
 
   synchronizeValue() {
+    if (!this.props.value || !this.props.value.length) {
+      return;
+    }
+
     mask(this.props.mask, this.props.value, text => {
       if (this.input && !this.input.isFocused()) {
         this.input.setNativeProps({ text })
