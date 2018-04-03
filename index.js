@@ -62,6 +62,7 @@ export default class TextInputMask extends Component {
   render() {
     return (<TextInput
       {...this.props}
+      collapsable={false}
       onBlur={this.onBlur}
       value={undefined}
       ref={ref => {
