@@ -24,18 +24,22 @@ export default class TextInputMask extends Component {
       this.synchronizeValue();
     }
 
-    if (this.props.mask) {
-      setMask(findNodeHandle(this.input), this.props.mask)
-    }
+    this.updateMask();
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.mask !== this.props.mask) {
-      setMask(findNodeHandle(this.input), this.props.mask)
+      this.updateMask();
     }
 
     if (prevProps.value !== this.props.value) {
       this.synchronizeValue();
+    }
+  }
+
+  updateMask() {
+    if (this.input && this.props.mask) {
+      setMask(findNodeHandle(this.input), this.props.mask);
     }
   }
 
@@ -49,6 +53,15 @@ export default class TextInputMask extends Component {
         this.input.setNativeProps({ text })
       }
     });
+  }
+
+  onInput = ref => {
+    this.input = ref;
+
+    typeof this.props.refInput === 'function' && this.props.refInput(ref);
+
+    this.updateMask();
+    this.synchronizeValue();
   }
 
   onBlur = (...args) => {
@@ -80,12 +93,7 @@ export default class TextInputMask extends Component {
       collapsable={false}
       onBlur={this.onBlur}
       value={undefined}
-      ref={ref => {
-        this.input = ref
-        if (typeof this.props.refInput === 'function') {
-          this.props.refInput(ref)
-        }
-      }}
+      ref={this.onInput}
       multiline={this.props.mask && Platform.OS === 'ios' ? false : this.props.multiline}
       onChangeText={this.onChangeText}
     />);
