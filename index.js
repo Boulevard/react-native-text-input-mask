@@ -7,9 +7,18 @@ import {
   Platform
 } from 'react-native'
 
-const mask = NativeModules.RNTextInputMask.mask
-const unmask = NativeModules.RNTextInputMask.unmask
-const setMask = NativeModules.RNTextInputMask.setMask
+const noop = () => {};
+
+let mask = noop;
+let unmask = noop;
+let setMask = noop;
+
+if (NativeModules.RNTextInputMask) {
+  ({mask, unmask, setMask} = NativeModules.RNTextInputMask);
+} else if (__DEV__) {
+  console.warn('react-native-text-input-mask native modules are not present');
+}
+
 export { mask, unmask, setMask }
 
 export default class TextInputMask extends Component {
