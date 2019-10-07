@@ -11,7 +11,7 @@ Text input mask for React Native on iOS and Android.
 ```bash
 npm install --save react-native-text-input-mask
 # --- or ---
-yarn add react-native-permissions
+yarn add react-native-text-input-mask
 ```
 
 #Installation
@@ -52,8 +52,7 @@ No need to do anything.
 
 </details>
 
-<details>
-  <summary><h4>For RN < 0.60</h4></summary>
+<details><summary><h4>For RN < 0.60</h4></summary>
 
 ### Auto Linking
 ```bash
